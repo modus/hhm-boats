@@ -1,0 +1,111 @@
+<title>Vessels Available at Holiday Hill Marina</title>
+<style>
+:root{
+  --ground:#EAEDEC;--surface:#FFFFFF;--surface-2:#F4F7F5;
+  --line:#CBD4D0;--line-soft:#DFE5E2;
+  --ink:#132320;--ink-2:#41534E;--muted:#6D7E79;
+  --accent:#0F6E6B;--accent-ink:#0B4D4B;--accent-soft:#E2F0EE;
+  --warn:#A8641A;--warn-soft:#FBF0E1;
+  --flag:#B0246B;--flag-soft:#FBE9F2;
+  --shadow:0 1px 2px rgba(19,35,32,.05),0 10px 30px -18px rgba(19,35,32,.35);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#0C1412;--surface:#141F1C;--surface-2:#1A2724;
+  --line:#2C3D39;--line-soft:#223330;
+  --ink:#E3EAE7;--ink-2:#B6C4C0;--muted:#7F908B;
+  --accent:#45B8B1;--accent-ink:#7BD3CD;--accent-soft:#102A28;
+  --warn:#DFA55C;--warn-soft:#2C2114;
+  --flag:#EC72A6;--flag-soft:#2E1420;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -18px rgba(0,0,0,.8);
+}}
+:root[data-theme="dark"]{
+  --ground:#0C1412;--surface:#141F1C;--surface-2:#1A2724;
+  --line:#2C3D39;--line-soft:#223330;
+  --ink:#E3EAE7;--ink-2:#B6C4C0;--muted:#7F908B;
+  --accent:#45B8B1;--accent-ink:#7BD3CD;--accent-soft:#102A28;
+  --warn:#DFA55C;--warn-soft:#2C2114;
+  --flag:#EC72A6;--flag-soft:#2E1420;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -18px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--ground);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding:0 22px 90px}
+
+.note{background:var(--flag-soft);border-bottom:1px solid var(--flag);padding:14px 22px}
+.note .in{max-width:1240px;margin:0 auto;font-size:13.5px;color:var(--ink-2)}
+.note b{color:var(--flag);letter-spacing:0}
+
+.mast{padding:34px 0 22px;border-bottom:2px solid var(--ink);display:grid;grid-template-columns:1fr auto;grid-template-areas:"id logo" "id count";column-gap:32px;row-gap:14px;align-items:start}
+.mast-id{grid-area:id}
+.logo{grid-area:logo;width:132px;height:auto;display:block;justify-self:end}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .logo{filter:brightness(1.45) saturate(.92)}}
+:root[data-theme="dark"] .logo{filter:brightness(1.45) saturate(.92)}
+.mast-id{flex:1 1 340px}
+.eyebrow{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 9px}
+h1{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:clamp(28px,4.2vw,40px);font-weight:700;letter-spacing:0;line-height:1.03;margin:0;text-wrap:balance}
+.dek{margin:11px 0 0;max-width:60ch;color:var(--ink-2)}
+.count{grid-area:count;align-self:end;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:12.5px;color:var(--muted);text-align:right;line-height:1.7}
+
+.bar{display:flex;flex-wrap:wrap;gap:10px 26px;align-items:center;padding:18px 0 0}
+.ctl{display:flex;align-items:center;gap:8px}
+.ctl label{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:12.5px;font-weight:600;letter-spacing:0;color:var(--muted)}
+select{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:13.5px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:6px 10px}
+select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.shown{margin-left:auto;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:12.5px;color:var(--muted)}
+
+.grid{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:22px}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:9px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.cover{aspect-ratio:4/3;background:#0d1614;overflow:hidden;border-bottom:2px solid var(--line)}
+.cover img{width:100%;height:100%;object-fit:cover;display:block}
+.cover.ph{display:grid;place-content:center;background:var(--surface-2)}
+.cover.ph div{text-align:center;display:grid;gap:3px}
+.phi{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:12.5px;font-weight:600;color:var(--muted)}
+.phs{font-size:11px;color:var(--muted);opacity:.8}
+.pad{padding:14px 16px 16px;display:flex;flex-direction:column;gap:2px;flex:1}
+.card h3{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16.5px;font-weight:700;letter-spacing:0;margin:0}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 9px}
+.loc{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:11.5px;font-weight:600;letter-spacing:0;padding:3px 9px;border-radius:3px}
+.loc.title-yes{background:var(--accent);color:#fff}
+.loc.title-no{background:var(--surface-2);color:var(--muted);box-shadow:inset 0 0 0 1px var(--line-soft)}
+.loc.afloat{background:var(--accent-soft);color:var(--accent-ink)}
+.loc.ashore{background:var(--warn-soft);color:var(--warn)}
+.desc{margin:0 0 12px;font-size:13.5px;color:var(--ink-2);line-height:1.5}
+.f{display:flex;gap:10px;padding:5px 0;border-top:1px solid var(--line-soft);align-items:baseline}
+.k{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:12.5px;font-weight:400;letter-spacing:0;color:var(--muted);flex:0 0 96px}
+.v{font-size:13.5px;flex:1}
+.pill{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:11.5px;font-weight:600;letter-spacing:0;padding:2px 7px;border-radius:2px;white-space:nowrap}
+.pill.ok{background:var(--accent-soft);color:var(--accent-ink);border:1px solid var(--accent)}
+.pill.warn{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn)}
+.sel{width:100%;font-size:13px;padding:4px 8px}
+.card.hide{display:none}
+
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 24px}
+@media (max-width:840px){.mast{grid-template-columns:1fr;grid-template-areas:"logo" "id" "count"}.logo{justify-self:start;width:118px}.count{text-align:left;align-self:start;padding-top:12px;border-top:1px solid var(--line-soft)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.grid{margin-top:26px}
+.pad{gap:0}
+.desc{margin:0 0 4px}
+.f:first-of-type{margin-top:10px}
+</style>
+<div class="wrap">
+<header class="mast">
+  <div class="mast-id">
+    <p class="eyebrow">Rhode River &middot; Mayo, Maryland</p>
+    <h1>Vessels Available at Holiday Hill Marina</h1>
+    <p class="dek">{{N_TOTAL_WORD}} vessels currently on the property. Holiday Hill is handling the title work. The {{N_HELD_WORD}} marked <b>title in hand</b> are listed first and can change hands as soon as you are ready. The remaining {{N_PENDING_WORD}} are working through the Maryland abandoned-vessel process and are <b>not yet available to transfer</b>; we can tell you where each one stands. Lengths shown with a ~ are estimates taken from photographs; exact figures come from the certificate of title.</p>
+  </div>
+  <img class="logo" src="img/logo.png" alt="Holiday Hill Marina">
+  <div class="count">{{TALLY}}</div>
+</header>
+
+<div class="grid" id="grid">
+{{CARDS}}
+</div>
+
+<footer>
+  <span>Trailers under the dry-storage boats stay with the marina and are not part of the donation.</span>
+  <span>Questions, or to arrange a visit: Holiday Hill Marina, Mayo MD &middot; (443) 871-3909</span>
+</footer>
+</div>
