@@ -1,0 +1,50 @@
+name: Rebuild listing from Airtable
+
+on:
+  schedule:
+    - cron: "0 11 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - "template.html"
+      - "build.py"
+      - "img/**"
+      - ".github/workflows/build.yml"
+
+concurrency:
+  group: build-listing
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run offline checks
+        run: python3 tests/test_build.py
+
+      - name: Rebuild index.html from Airtable
+        env:
+          AIRTABLE_TOKEN: ${{ secrets.AIRTABLE_TOKEN }}
+        run: python3 build.py
+
+      - name: Commit only if the page actually changed
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No change — nothing to commit."
+            exit 0
+          fi
+          git config user.name  "hhm-listing-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Rebuild listing from Airtable"
+          git push
+          echo "Committed. GitHub Pages will redeploy in about a minute."
