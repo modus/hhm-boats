@@ -59,12 +59,24 @@ def word(n):
     return str(n)
 
 
+def sel(v):
+    """singleSelect comes back as an object; take its name."""
+    return v.get("name", "") if isinstance(v, dict) else (v or "")
+
+
 def fetch_records(token):
-    """All 'On list' vessels, following pagination."""
+    """Every vessel row, following pagination.
+
+    Only the handful of fields the page needs are requested — no attachments,
+    no owner details, nothing private leaves Airtable. Filtering to the charity
+    list happens in Python rather than in a filterByFormula: formulas want field
+    NAMES, which anyone can rename in the Airtable UI, and a renamed field would
+    silently return zero rows. Field IDs are stable, so we filter on those here.
+    """
+    wanted = list(F.values())
     out, offset = [], None
     while True:
-        params = [("pageSize", "100"),
-                  ("filterByFormula", f"{{{F['list']}}}='{ON_LIST}'")]
+        params = [("pageSize", "100")] + [("fields[]", fid) for fid in wanted]
         if offset:
             params.append(("offset", offset))
         url = (f"https://api.airtable.com/v0/{BASE_ID}/{TABLE_ID}"
@@ -75,11 +87,26 @@ def fetch_records(token):
                 data = json.load(r)
         except urllib.error.HTTPError as e:
             body = e.read().decode("utf-8", "replace")[:400]
-            sys.exit(f"Airtable returned {e.code}: {body}")
+            hint = ""
+            if e.code in (401, 403):
+                hint = (
+                    "\n\nThis is almost always the token rather than the code. Check at"
+                    "\n  https://airtable.com/create/tokens"
+                    "\n  1. the token has the HHM Active Customers base under Access"
+                    "\n     (a new token starts with NO bases attached)"
+                    "\n  2. the token has the data.records:read scope"
+                    "\n  3. the secret in GitHub is named exactly AIRTABLE_TOKEN"
+                    "\n     and holds the token value, not the token's name or ID"
+                )
+            sys.exit(f"Airtable returned {e.code}: {body}{hint}")
         out += data.get("records", [])
         offset = data.get("offset")
         if not offset:
-            return out
+            break
+
+    keep = [r for r in out if sel(r.get("fields", {}).get(F["list"])) == ON_LIST]
+    print(f"Airtable: {len(out)} rows read, {len(keep)} on the charity list")
+    return keep
 
 
 def sort_key(code):
@@ -99,11 +126,6 @@ def sort_key(code):
 def slip_code(f):
     """Key used for the photo filename: '1-6', 'DT-29', 'B-3'."""
     return (f.get(F["slip"]) or f.get(F["dry"]) or "").strip()
-
-
-def sel(v):
-    """singleSelect comes back as an object; take its name."""
-    return v.get("name", "") if isinstance(v, dict) else (v or "")
 
 
 def curly(text):
