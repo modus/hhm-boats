@@ -18,7 +18,7 @@ Airtable  ──►  build.py  ──►  index.html  ──►  GitHub Pages
 |---|---|
 | `build.py` | Reads the vessels from Airtable and writes `index.html` |
 | `template.html` | The page shell — layout, styling, wording round the edges |
-| `img/` | One photograph per boat, named by slip (`1-6.jpg`, `DT-29.jpg`) |
+| `img/` | One photograph per boat, named by Airtable record ID. `img/PHOTO-INDEX.md` says which file is which boat |
 | `index.html` | Generated. **Do not edit by hand — the next build overwrites it** |
 | `tests/` | Offline checks that run before every build |
 | `.github/workflows/build.yml` | The schedule and the commit step |
@@ -78,10 +78,21 @@ the job last ran. That is deliberate: a nightly cron stamping a fresh date
 would commit a new page every day and tell the reader nothing.
 
 **Photographs are not automated.** Every crop was framed by eye — whole hull in
-shot, transom name legible. A build cannot redo that. To change a photo, replace
-the file in `img/` keeping the slip name, and commit. A boat with no matching
+shot, transom name legible. A build cannot redo that. A boat with no matching
 file still gets a card, with a placeholder where the photo goes, and the build
 log says which one is missing.
+
+**Photographs are named by Airtable record ID, not by slip.** They used to be
+named by slip. In September four dry storage boats were renumbered in Airtable
+— DT-29 to DT-30, CDS-22 to CDS-25, DT-17 to DT-18, DT-34 to DT-35 — the build
+could no longer find `img/DT-29.jpg`, and four cards silently lost their
+photographs. A record ID cannot be renumbered, so that cannot recur.
+
+The cost is that `img/` is no longer readable at a glance. **`img/PHOTO-INDEX.md`
+is the key** — file, slip, vessel, regenerated on every build so it cannot go
+stale. To replace a photo, overwrite the file that index names, keeping the
+name. A file named by slip code still works as a fallback, so dropping in
+`DT-30.jpg` will be picked up, but the record ID is the one that is safe.
 
 ---
 

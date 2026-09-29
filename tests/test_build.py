@@ -63,8 +63,18 @@ check("no collection-timing note on 2-3", "autumn" not in by["2-3"]["desc"].lowe
 check("2-3 carries no unconfirmed name", "4.fun" not in by["2-3"]["title"])
 
 # photographs
-missing = [b["code"] for b in boats if not (HERE.parent / "img" / f"{b['code']}.jpg").exists()]
+missing = [b["code"] for b in boats if not build.photo(b)]
 check("every vessel has a photo file", not missing, str(missing))
+
+by_rid = [b["code"] for b in boats if build.photo(b) != f"img/{b['rid']}.jpg"]
+check("every photo resolves by record ID, not slip code", not by_rid, str(by_rid))
+
+# The bug this guards against: in September four dry storage boats were
+# renumbered in Airtable and their photographs vanished from the page,
+# because the files were named by slip code. Renumbering must be a no-op.
+renamed = dict(boats[0])
+renamed["code"] = "ZZ-999"
+check("renumbering a slip keeps the photo", build.photo(renamed) is not None)
 
 # rendering
 cards = "\n".join(build.card(b) for b in boats)
