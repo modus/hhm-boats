@@ -89,6 +89,21 @@ for ph in ("{{CARDS}}", "{{TALLY}}", "{{N_TOTAL_WORD}}", "{{N_HELD_WORD}}", "{{N
     check(f"template has {ph}", ph in tmpl)
 check("template carries no embedded images", "base64" not in tmpl)
 
+# home-screen icon. These live in the head, which build.py closes at </style>,
+# so anything declared after the stylesheet would land in the body and be ignored.
+head = tmpl.split("</style>")[0]
+for tag in ('rel="apple-touch-icon"', 'rel="icon"', 'rel="manifest"',
+            'name="apple-mobile-web-app-title"'):
+    check(f"head declares {tag}", tag in head)
+for f in ("apple-touch-icon.png", "icon-192.png", "icon-512.png",
+          "favicon-32.png", "site.webmanifest"):
+    check(f"{f} exists", (HERE.parent / f).exists())
+man = json.loads((HERE.parent / "site.webmanifest").read_text())
+check("manifest short_name fits a phone label", len(man["short_name"]) <= 12,
+      man["short_name"])
+check("manifest icons all present",
+      all((HERE.parent / i["src"]).exists() for i in man["icons"]))
+
 # nothing private may reach the page
 page = tmpl.replace("{{CARDS}}", cards)
 visible = " ".join(re.findall(r">([^<>]+)<", page))
